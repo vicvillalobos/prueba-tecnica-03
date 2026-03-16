@@ -134,14 +134,14 @@ public class ApiTest {
                 {"firstName": "John", "lastName": "Doe", "email": "not-an-email", "gender": "M"}""");
         check("Customer POST invalid email returns 400", emailRes.statusCode() == 400);
         var errors = mapper.readTree(emailRes.body());
-        check("Customer invalid email error message", errors.toString().contains("email must be a valid email address"));
+        check("Customer invalid email error message", errors.toString().contains("field 'email' must be a valid email address"));
 
         // Invalid gender
         var genderRes = post("/customers", """
                 {"firstName": "John", "lastName": "Doe", "email": "john@example.com", "gender": "X"}""");
         check("Customer POST invalid gender returns 400", genderRes.statusCode() == 400);
         var genderErrors = mapper.readTree(genderRes.body());
-        check("Customer invalid gender error message", genderErrors.toString().contains("gender is required"));
+        check("Customer invalid gender error message", genderErrors.toString().contains("field 'gender' is required"));
 
         // PATCH with invalid email
         var createRes = post("/customers", """
@@ -150,6 +150,11 @@ public class ApiTest {
         var patchRes = patch("/customers/" + id, """
                 {"email": "invalid"}""");
         check("Customer PATCH invalid email returns 400", patchRes.statusCode() == 400);
+
+        // PATCH with invalid gender
+        var patchGenderRes = patch("/customers/" + id, """
+                {"gender": "X"}""");
+        check("Customer PATCH invalid gender returns 400", patchGenderRes.statusCode() == 400);
 
         // Cleanup
         delete("/customers/" + id);

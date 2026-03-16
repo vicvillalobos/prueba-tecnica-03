@@ -5,6 +5,6 @@ import com.vsraven.model.Customer;
 
 public class CustomerRepository extends Repository<Customer> {
     public CustomerRepository(Database db) {
-        super(db, "customer");
+        super(db, "customers");
     }
 }

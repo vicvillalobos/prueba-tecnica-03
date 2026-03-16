@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public record Customer(
@@ -27,20 +28,22 @@ public record Customer(
                 patch.has("firstName") ? patch.get("firstName").asText() : this.firstName,
                 patch.has("lastName") ? patch.get("lastName").asText() : this.lastName,
                 patch.has("email") ? patch.get("email").asText() : this.email,
-                patch.has("gender") ? Gender.valueOf(patch.get("gender").asText()) : this.gender
+                patch.has("gender") ? Arrays.stream(Gender.values())
+                        .filter(g -> g.name().equals(patch.get("gender").asText()))
+                        .findFirst().orElse(null) : this.gender
         );
     }
 
     public List<String> validate() {
         var errors = new ArrayList<String>();
-        if (firstName == null || firstName.isBlank()) errors.add("firstName is required");
-        if (lastName == null || lastName.isBlank()) errors.add("lastName is required");
+        if (firstName == null || firstName.isBlank()) errors.add("field 'firstName' is required");
+        if (lastName == null || lastName.isBlank()) errors.add("field 'lastName' is required");
         if (email == null || email.isBlank()) {
-            errors.add("email is required");
+            errors.add("field 'email' is required");
         } else if (!email.matches("^[\\w.-]+@[\\w.-]+\\.[a-zA-Z]{2,}$")) {
-            errors.add("email must be a valid email address");
+            errors.add("field 'email' must be a valid email address");
         }
-        if (gender == null) errors.add("gender is required, valid values: M, F, O");
+        if (gender == null) errors.add("field 'gender' is required, valid values: M, F, O");
         return errors;
     }
 }

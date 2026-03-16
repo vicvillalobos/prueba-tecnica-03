@@ -31,7 +31,7 @@ public class App {
                 if (!ctx.body().isEmpty()) {
                     var contentType = ctx.contentType();
                     if (contentType == null || !contentType.contains("application/json")) {
-                        ctx.status(415).result("{\"message\": \"Content-Type must be application/json\"}");
+                        ctx.status(415).json("{\"message\": \"Content-Type must be application/json\"}");
                         ctx.skipRemainingHandlers();
                     }
                 }

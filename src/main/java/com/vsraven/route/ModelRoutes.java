@@ -36,8 +36,6 @@ public abstract class ModelRoutes<T extends Entity<T>> {
     }
 
     protected void findOne(Context context) {
-        // TODO: Validate ID parameter
-
         Optional<T> item = this.repository.findOne(context.pathParam("id"));
         if (item.isEmpty()) {
             context.status(HttpStatus.NOT_FOUND);
