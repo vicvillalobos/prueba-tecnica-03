@@ -26,5 +26,5 @@ jobs:
       - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
-          files: target/prueba-tecnica-03-1.0-SNAPSHOT.jar
+          files: target/prueba-tecnica-03.jar
           generate_release_notes: true

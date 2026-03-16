@@ -22,12 +22,12 @@ Los datos son guardados en un archivo local usando MapDB (`data/app.db`).
 mvn clean package
 ```
 
-Esto generará un JAR ejecutable con todas las dependencias incluidas en `target/prueba-tecnica-03-1.0-SNAPSHOT.jar`.
+Esto generará un JAR ejecutable con todas las dependencias incluidas en `target/prueba-tecnica-03.jar`.
 
 ## Ejecución
 
 ```bash
-java -jar target/prueba-tecnica-03-1.0-SNAPSHOT.jar
+java -jar target/prueba-tecnica-03.jar
 ```
 
 El servidor escuchará en `http://localhost:7070`.
