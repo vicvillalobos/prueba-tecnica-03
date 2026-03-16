@@ -1,0 +1,398 @@
+openapi: 3.0.3
+info:
+  title: Prueba Técnica 03
+  description: API REST para gestión de libros y clientes.
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:7070/api/v1
+    description: Servidor de desarrollo
+
+paths:
+  /books:
+    get:
+      summary: Listar todos los libros
+      operationId: listBooks
+      tags: [Books]
+      responses:
+        "200":
+          description: Lista de libros
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Book"
+
+    post:
+      summary: Crear un libro
+      operationId: createBook
+      tags: [Books]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BookInput"
+            example:
+              title: "Cien años de soledad"
+              publicationYear: 1967
+              edition: 1
+              authorName: "Gabriel Garcia Marquez"
+      responses:
+        "201":
+          description: Libro creado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Book"
+        "400":
+          description: Error de validación
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ValidationErrors"
+        "415":
+          description: Content-Type no es application/json
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+
+  /books/{id}:
+    parameters:
+      - $ref: "#/components/parameters/Id"
+
+    get:
+      summary: Obtener un libro por ID
+      operationId: getBook
+      tags: [Books]
+      responses:
+        "200":
+          description: Libro encontrado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Book"
+        "404":
+          description: Libro no encontrado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+
+    patch:
+      summary: Actualizar un libro
+      operationId: updateBook
+      tags: [Books]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BookPatch"
+            example:
+              title: "Nuevo título"
+      responses:
+        "200":
+          description: Libro actualizado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Book"
+        "400":
+          description: Error de validación
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ValidationErrors"
+        "404":
+          description: Libro no encontrado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+        "415":
+          description: Content-Type no es application/json
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+
+    delete:
+      summary: Eliminar un libro
+      operationId: deleteBook
+      tags: [Books]
+      responses:
+        "204":
+          description: Libro eliminado
+        "404":
+          description: Libro no encontrado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+
+  /customers:
+    get:
+      summary: Listar todos los clientes
+      operationId: listCustomers
+      tags: [Customers]
+      responses:
+        "200":
+          description: Lista de clientes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Customer"
+
+    post:
+      summary: Crear un cliente
+      operationId: createCustomer
+      tags: [Customers]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CustomerInput"
+            example:
+              firstName: "Juan"
+              lastName: "Pérez"
+              email: "juan@correo.cl"
+              gender: "M"
+      responses:
+        "201":
+          description: Cliente creado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Customer"
+        "400":
+          description: Error de validación
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ValidationErrors"
+        "415":
+          description: Content-Type no es application/json
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+
+  /customers/{id}:
+    parameters:
+      - $ref: "#/components/parameters/Id"
+
+    get:
+      summary: Obtener un cliente por ID
+      operationId: getCustomer
+      tags: [Customers]
+      responses:
+        "200":
+          description: Cliente encontrado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Customer"
+        "404":
+          description: Cliente no encontrado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+
+    patch:
+      summary: Actualizar un cliente
+      operationId: updateCustomer
+      tags: [Customers]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CustomerPatch"
+            example:
+              email: "nuevo@correo.cl"
+      responses:
+        "200":
+          description: Cliente actualizado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Customer"
+        "400":
+          description: Error de validación
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ValidationErrors"
+        "404":
+          description: Cliente no encontrado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+        "415":
+          description: Content-Type no es application/json
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+
+    delete:
+      summary: Eliminar un cliente
+      operationId: deleteCustomer
+      tags: [Customers]
+      responses:
+        "204":
+          description: Cliente eliminado
+        "404":
+          description: Cliente no encontrado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+
+components:
+  parameters:
+    Id:
+      name: id
+      in: path
+      required: true
+      description: ID del recurso (UUID)
+      schema:
+        type: string
+        format: uuid
+
+  schemas:
+    Book:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+        title:
+          type: string
+          example: "Cien años de soledad"
+        publicationYear:
+          type: integer
+          example: 1967
+        edition:
+          type: integer
+          minimum: 1
+          example: 1
+        authorName:
+          type: string
+          example: "Gabriel Garcia Marquez"
+
+    BookInput:
+      type: object
+      required: [title, publicationYear, edition, authorName]
+      properties:
+        title:
+          type: string
+          description: No puede estar vacío
+        publicationYear:
+          type: integer
+          description: Debe ser un entero positivo
+          minimum: 1
+        edition:
+          type: integer
+          description: Debe ser >= 1
+          minimum: 1
+        authorName:
+          type: string
+          description: No puede estar vacío
+
+    BookPatch:
+      type: object
+      description: Todos los campos son opcionales. Solo se actualizan los campos enviados.
+      properties:
+        title:
+          type: string
+        publicationYear:
+          type: integer
+          minimum: 1
+        edition:
+          type: integer
+          minimum: 1
+        authorName:
+          type: string
+
+    Customer:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: "f1e2d3c4-b5a6-7890-abcd-ef1234567890"
+        firstName:
+          type: string
+          example: "Juan"
+        lastName:
+          type: string
+          example: "Pérez"
+        email:
+          type: string
+          format: email
+          example: "juan@correo.cl"
+        gender:
+          type: string
+          enum: [M, F, O]
+          example: "M"
+
+    CustomerInput:
+      type: object
+      required: [firstName, lastName, email, gender]
+      properties:
+        firstName:
+          type: string
+          description: No puede estar vacío
+        lastName:
+          type: string
+          description: No puede estar vacío
+        email:
+          type: string
+          format: email
+          description: Debe ser un email válido
+        gender:
+          type: string
+          enum: [M, F, O]
+          description: "Valores válidos: M (masculino), F (femenino), O (otro)"
+
+    CustomerPatch:
+      type: object
+      description: Todos los campos son opcionales. Solo se actualizan los campos enviados.
+      properties:
+        firstName:
+          type: string
+        lastName:
+          type: string
+        email:
+          type: string
+          format: email
+        gender:
+          type: string
+          enum: [M, F, O]
+
+    ValidationErrors:
+      type: array
+      description: Lista de errores de validación
+      items:
+        type: string
+      example:
+        - "field 'title' is required"
+        - "field 'edition' must be a positive integer"
+
+    ErrorMessage:
+      type: object
+      properties:
+        message:
+          type: string
+      example:
+        message: "Item not found"
