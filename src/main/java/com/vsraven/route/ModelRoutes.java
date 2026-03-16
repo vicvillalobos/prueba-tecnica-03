@@ -80,6 +80,13 @@ public abstract class ModelRoutes<T extends Entity<T>> {
 
         var updatedItem = itemToBeUpdated.get().patch(context.bodyAsClass(JsonNode.class));
 
+        var errors = updatedItem.validate();
+        if (!errors.isEmpty()) {
+            context.status(HttpStatus.BAD_REQUEST);
+            context.json(errors);
+            return;
+        }
+
         if(!this.repository.update(updatedItem)) {
             context.status(HttpStatus.INTERNAL_SERVER_ERROR);
             context.json("{\"message\": \"Failed to update item\"}");

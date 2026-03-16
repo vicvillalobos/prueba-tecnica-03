@@ -35,8 +35,12 @@ public record Customer(
         var errors = new ArrayList<String>();
         if (firstName == null || firstName.isBlank()) errors.add("firstName is required");
         if (lastName == null || lastName.isBlank()) errors.add("lastName is required");
-        if (email == null || email.isBlank()) errors.add("email is required"); // TODO: Validate email format
-        if (gender == null) errors.add("gender is required");
+        if (email == null || email.isBlank()) {
+            errors.add("email is required");
+        } else if (!email.matches("^[\\w.-]+@[\\w.-]+\\.[a-zA-Z]{2,}$")) {
+            errors.add("email must be a valid email address");
+        }
+        if (gender == null) errors.add("gender is required, valid values: M, F, O");
         return errors;
     }
 }
